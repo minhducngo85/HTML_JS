@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+// Add some data to the table
+let header = ["Name", "Age", "City"];
+
+// table data
+let data = [];
+let data0 = [];
+for (let i = 0; i< 10; i++) {
+	let name = getRandomName();
+	let age = getRandomAge();
+	let city = getRandomCity();
+	data0.push([name,age,city]);
+}
+data.push(data0);
+
+let data1 = [
+	["Minh Duc", 30, "Bochum"],
+	["Hung", 25, "London"],
+	["Hien", 35, "Paris"],
+	["Lucas", 35, "Köln"],
+];
+data.push(data1);
+let data2 = [
+	["Quynh Anh", 35, "Paris"],
+	["Phuc", 30, "New York"],
+	["Tien", 25, "London"],
+	["Cuong", 35, "Paris"],
+];
+data.push(data2);
+let data3 = [
+	["John", 20, "New York"],
+	["Jane", 25, "London"],
+	["Bob", 53, "Paris"],
+];
+data.push(data3);
+
+//const data = [data0, data1, data2, data3];
+
+/** return data of all table contents */
+function combinedTableData() {
+	let allData = [];
+	for (let i = 0; i < data.length; i++) {
+		for (let j = 0; j < data[i].length; j++) {
+			allData.push(data[i][j]);
+		}
+	}
+	return allData;
+}
+
+function createHtmlTable(data) {
+	console.log(data);
+	// Create an empty table element
+	//let table = document.createElement("table");
+
+	// Create table header
+	var tableHead = document.getElementById("myTableHead");
+	tableHead.innerHTML = "";
+	let row = document.createElement("tr");
+	for (let j = 0; j < header.length; j++) {
+		let cell = document.createElement("th");
+		cell.innerHTML = header[j];
+		row.appendChild(cell);
+	}
+	tableHead.appendChild(row);
+
+	// create table content
+	var tableContent = document.getElementById("myTableContent");
+	tableContent.innerHTML = "";
+	// Loop through the data and add the rows and cells
+	for (let i = 0; i < data.length; i++) {
+		// Create a new row
+		let row = document.createElement("tr");
+		// Add the cells to the row
+		for (let j = 0; j < data[i].length; j++) {
+			let cell = document.createElement("td");
+			cell.innerHTML = data[i][j];
+			row.appendChild(cell);
+		}
+		// Add the row to the table
+		tableContent.appendChild(row);
+	}
+};
+
+function createSelectOptions() {
+	// Get a reference to the select element
+	var select = document.getElementById("mySelect");
+
+	// Create an array of options
+	var options = [{
+			value: "all",
+			text: "All"
+		}, {
+			value: "0",
+			text: "Table Variant 1"
+		}, {
+			value: "1",
+			text: "Table Variant 2"
+		}, {
+			value: "2",
+			text: "Table Variant 3"
+		}, {
+			value: "3",
+			text: "Table Variant 4"
+		}
+	];
+
+	// Loop through the array of options
+	for (var i = 0; i < options.length; i++) {
+		// Create a new option element
+		var option = document.createElement("option");
+
+		// Set the option's value and text
+		option.value = options[i].value;
+		option.text = options[i].text;
+
+		// Add the option to the select element
+		select.add(option);
+	}
+}
+
+function getRandomName() {
+  // Create an array of first names
+  const firstNames = ["Duc", "Lucas", "Mia", "Quynh Anh", "Alice", "Bob", "Charlie", "David", "Eve", "Frank"];
+
+  // Create an array of last names
+  const lastNames = ["Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Ngo", "Nguyen"];
+
+  // Get a random index for the first name array
+  const firstNameIndex = Math.floor(Math.random() * firstNames.length);
+
+  // Get a random index for the last name array
+  const lastNameIndex = Math.floor(Math.random() * lastNames.length);
+
+  // Concatenate the first name and last name and return the result
+  return firstNames[firstNameIndex] + " " + lastNames[lastNameIndex];
+}
+
+function getRandomAge() {
+  // Generate a random number between 18 and 65
+  const age = Math.floor(Math.random() * (65 - 18 + 1)) + 18;
+
+  return age;
+}
+
+function getRandomCity() {
+  // Create an array of cities
+  const cities = ["New York", "Hanoi", "Ho Chi Minh", "Los Angeles", "Chicago", "Paris", "Köln", "Düsseldorf", "Bochum", "San Diego", "Dallas", "San Jose"];
+
+  // Get a random index for the cities array
+  const cityIndex = Math.floor(Math.random() * cities.length);
+
+  // Return the city at the random index
+  return cities[cityIndex];
+}
+
+// read function
+$(document).ready(function () {
+	// generate select options
+	createSelectOptions();
+	// build table
+	createHtmlTable(combinedTableData());
+
+});
+</script>
+
+<style>
+
+/** Table*/
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #d0d0d0;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+th {
+  background-color: #bec7ce;
+}
+</style>
+
+</head>
+<body>
+<h2>Filterable Table</h2>
+Data: <select id="mySelect">
+   <!-- Options will be added dynamically -->
+	</select>
+&nbsp;&nbsp;
+Filter: <input id="myInput" type="text" placeholder="Search..">
+<br><br>
+
+<table id="myTable">
+	<thead id="myTableHead">
+	</thead>
+ <tbody id="myTableContent">
+ </tbody>
+</table>
+<p>Note that we start the search in tbody, to prevent filtering the table headers.</p>
+
+<script>
+// select listener
+var select = document.getElementById("mySelect");
+select.addEventListener("change", function (event) {
+	var x = document.getElementById("mySelect").value;
+	if ("all" === x) {
+		createHtmlTable(combinedTableData());
+	} else {
+		createHtmlTable(data[x]);
+	}
+});
+
+// input keyup event listener
+var input = document.getElementById("myInput");
+input.addEventListener("keyup", function(event) {
+    var value = document.getElementById("myInput").value;
+	value = value.toLowerCase();
+	$("#myTableContent tr").filter(function() {
+	console.log($(this).text());
+		$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+	});
+});
+</script>
+
+</body>
+</html>
+
+
